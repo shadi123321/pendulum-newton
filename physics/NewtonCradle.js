@@ -3,6 +3,7 @@
 // ========================================================================
 
 import { PendulumPhysics } from './PendulumPhysics.js';
+import { CradleAudio } from '../Audio.js';
 
 export class NewtonCradle {
     constructor() {
@@ -45,6 +46,7 @@ export class NewtonCradle {
                     const v1 = left.getTangentialVelocity();
                     const v2 = right.getTangentialVelocity();
                     if (v1 > v2) {
+                        if (pass === 0) CradleAudio.play(v1 - v2);
                         PendulumPhysics.resolveCollision(left, right, left.restitution);
                     }
                 }
