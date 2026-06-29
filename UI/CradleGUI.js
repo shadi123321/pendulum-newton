@@ -43,7 +43,10 @@ export default class CradleGUI {
         massesFolder.add(this.settings, 'ball4Mass', 0.1, 5.0, 0.1).name('كتلة #4').onChange(v => this.setBallMass(4, v));
 
         const physFolder = this.gui.addFolder('الفيزياء');
-        physFolder.add(this.settings, 'g', 0, 25, 0.1).name('الجاذبية g').onChange(v => this.cradle.g = v);
+        
+        // 🌟 التعديل هنا: استدعاء setGravity بدلاً من تعديل المتغير مباشرة
+        physFolder.add(this.settings, 'g', 0, 25, 0.1).name('الجاذبية g').onChange(v => this.cradle.setGravity(v));
+        
         physFolder.add(this.settings, 'damping', 0.90, 1.0, 0.001).name('معامل التخميد').onChange(v => {
             this.cradle.balls.forEach(b => b.damping = v);
         });
@@ -122,7 +125,9 @@ export default class CradleGUI {
         this.settings.ball0Angle = 0; this.settings.ball1Angle = 0; this.settings.ball2Angle = 0; this.settings.ball3Angle = 0; this.settings.ball4Angle = 0;
         this.settings.ball0Mass = 1.0; this.settings.ball1Mass = 1.0; this.settings.ball2Mass = 1.0; this.settings.ball3Mass = 1.0; this.settings.ball4Mass = 1.0;
 
-        this.cradle.g = 9.81;
+        // 🌟 التعديل هنا: استخدام دالة setGravity لضمان تمرير 9.81 لجميع الكرات عند إعادة الضبط
+        this.cradle.setGravity(9.81);
+        
         this.cradle.balls.forEach((ball) => {
             ball.mass = 1.0; ball.length = 1.0; ball.damping = 0.9995;
             ball.theta = 0;

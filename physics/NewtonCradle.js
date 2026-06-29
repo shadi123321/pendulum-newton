@@ -3,7 +3,7 @@
 // ========================================================================
 
 import { PendulumPhysics } from './PendulumPhysics.js';
-import { CradleAudio } from '../Audio.js';
+import { CradleAudio } from '../Audio.js'; // تأكد من مسار الصوت لديك
 
 export class NewtonCradle {
     constructor() {
@@ -21,8 +21,16 @@ export class NewtonCradle {
                 g: this.g,
                 damping: 0.9995,
                 ballRadius: this.radius,
-                restitution: 0.98
+                 restitution: 0.98
             }));
+        }
+    }
+
+    // 🌟 التعديل هنا: دالة جديدة لتحديث الجاذبية في النظام بأكمله
+    setGravity(newG) {
+        this.g = newG;
+        for (const ball of this.balls) {
+            ball.g = newG; // تمرير الجاذبية الجديدة لكل كرة على حدة
         }
     }
 
@@ -46,7 +54,10 @@ export class NewtonCradle {
                     const v1 = left.getTangentialVelocity();
                     const v2 = right.getTangentialVelocity();
                     if (v1 > v2) {
-                        if (pass === 0) CradleAudio.play(v1 - v2);
+                        // استخدام pass === 0 لمنع تداخل الأصوات في نفس الإطار
+                        if (pass === 0 && typeof CradleAudio !== 'undefined') {
+                            CradleAudio.play(v1 - v2);
+                        }
                         PendulumPhysics.resolveCollision(left, right, left.restitution);
                     }
                 }

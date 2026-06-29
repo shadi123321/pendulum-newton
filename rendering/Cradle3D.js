@@ -64,7 +64,7 @@ export function createCradle3D(scene) {
     cradleGroup.position.set(0, 1.5, -0.2);
     scene.add(cradleGroup);
 
-    function updateCradleFromPhysics(physicsEngine) {
+   function updateCradleFromPhysics(physicsEngine) {
         for (let i = 0; i < 5; i++) {
             const ball = physicsEngine.balls[i];
             if (!ball) continue;
@@ -76,6 +76,11 @@ export function createCradle3D(scene) {
 
             mesh.position.set(bx, by, 0);
 
+            // 🌟 التعديل الجديد: تغيير حجم (مقياس) الكرة بناءً على كتلتها ديناميكياً
+            // نستخدم الجذر التكعيبي (Cube Root) لمحاكاة تغير الحجم الفيزيائي الواقعي الثابت الكثافة
+const scaleFactor = Math.sqrt(ball.mass);
+            mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
             const fp = frontStr.geometry.attributes.position.array;
             fp[3] = bx; fp[4] = by;
             frontStr.geometry.attributes.position.needsUpdate = true;
@@ -85,10 +90,7 @@ export function createCradle3D(scene) {
             backStr.geometry.attributes.position.needsUpdate = true;
 
             const tension = ball.computeTensionPerWire(physicsEngine.wireAlpha);
-            const intensity = Math.min(1, tension / MAX_TENSION);
-            const color = new THREE.Color().setHSL(0.33 * (1 - intensity), 1, 0.4);
-            frontStr.material.color = color;
-            backStr.material.color = color;
+            // يمكنك هنا أيضاً تعديل ألوان الخيوط بناءً على الوزن إن أردت لاحقاً
         }
     }
 
